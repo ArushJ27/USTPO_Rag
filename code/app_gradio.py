@@ -251,7 +251,7 @@ with gr.Blocks(title="Patent RAG Demo") as demo:
     # Header
     gr.HTML("""
     <div style='text-align: center; margin-bottom: 2rem;'>
-        <h1 style='font-size: 2.2rem; color: #1d3557; margin-bottom: 0.2rem;'>USPTO Patent RAG System</h1>
+        <h1 style='font-size: 2.2rem; color: #112244 !important; margin-bottom: 0.2rem;'>USPTO Patent RAG System</h1>
         <div style='font-size: 1.05rem; color: #555;'>A Senior Project by Arush Joshi</div>
         <div style='font-size: 0.95rem; color: #777;'>BASIS Independent High School · Class of 2025</div>
     </div>
@@ -284,11 +284,17 @@ with gr.Blocks(title="Patent RAG Demo") as demo:
 
     preview = gr.HTML(label="Patent front page", visible=False, elem_id="preview")
 
-    btn.click(run_search, inputs=[txt, img], outputs=out)
-    txt.submit(run_search, inputs=[txt, img], outputs=out)
-    prev_btn.click(load_patent_html, inputs=pat_in, outputs=preview)
-    pat_in.submit(load_patent_html, inputs=pat_in, outputs=preview)
+    # Logic: clear preview on new search
+    btn.click(fn=lambda: gr.update(value="", visible=False), inputs=[], outputs=preview)
+    btn.click(fn=run_search, inputs=[txt, img], outputs=out)
+    txt.submit(fn=run_search, inputs=[txt, img], outputs=out)
 
+    # Logic: show loading state before loading patent details
+    prev_btn.click(fn=lambda: gr.update(value="<p><em>Loading patent details...</em></p>", visible=True), inputs=[], outputs=preview)
+    prev_btn.click(fn=load_patent_html, inputs=pat_in, outputs=preview)
+    pat_in.submit(fn=load_patent_html, inputs=pat_in, outputs=preview)
+
+    # Custom CSS
     gr.HTML("""
     <style>
     body {
@@ -297,7 +303,7 @@ with gr.Blocks(title="Patent RAG Demo") as demo:
         color: #333;
     }
     h1, h2, h3 {
-        color: #1d3557;
+        color: #112244;
     }
     .gradio-container {
         padding: 2rem;
