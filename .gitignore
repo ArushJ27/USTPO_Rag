@@ -1,0 +1,46 @@
+
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+
+# Virtual environments
+venv/
+.env*/
+
+# Jupyter & VS Code helpers
+.ipynb_checkpoints/
+.vscode/
+
+# macOS & system junk
+.DS_Store
+Thumbs.db
+
+# Build / distribution
+build/
+dist/
+*.egg-info/
+
+# Large data & generated files
+embeddings/
+data/
+*.npy
+*.bin
+*.faiss
+
+# Logs
+*.log
+
+# Secrets & API keys
+.env
+.env.*
+OPENAI_API_KEY
+
+# Local patent HTML previews
+*.html
+
+# Node / Gradio cache
+node_modules/
+.gradio/
