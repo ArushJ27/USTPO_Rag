@@ -248,25 +248,109 @@ def load_patent_html(pat_num: str):
 # 9. Gradio UI
 # ────────────────────────────────────────────────────────
 with gr.Blocks(title="Patent RAG Demo") as demo:
-    gr.Markdown("## 🔍 USPTO Patent Retrieval‑Augmented Demo")
-    with gr.Row():
-        txt = gr.Textbox(label="Text Query", placeholder="e.g. semiconductor packaging")
-        img = gr.Image(label="Or upload a drawing (leave text blank for image search)",
-                       type="pil")
-    btn = gr.Button("Search")
-    out = gr.HTML()
+    # Header
+    gr.HTML("""
+    <div style='text-align: center; margin-bottom: 2rem;'>
+        <h1 style='font-size: 2.2rem; color: #1d3557; margin-bottom: 0.2rem;'>USPTO Patent RAG System</h1>
+        <div style='font-size: 1.05rem; color: #555;'>A Senior Project by Arush Joshi</div>
+        <div style='font-size: 0.95rem; color: #777;'>BASIS Independent High School · Class of 2025</div>
+    </div>
+    """)
 
+    gr.Markdown("### 🔎 Search Input")
+    mode = gr.Radio(["Text Query", "Image Search"], label="Select Search Mode", value="Text Query")
+
+    txt = gr.Textbox(label="Text Query", placeholder="e.g. semiconductor packaging", visible=True)
+    img = gr.Image(label="Upload a drawing", type="pil", visible=False)
+
+    def toggle_inputs(mode_choice):
+        return (
+            gr.update(visible=mode_choice == "Text Query"),
+            gr.update(visible=mode_choice == "Image Search")
+        )
+
+    mode.change(toggle_inputs, inputs=mode, outputs=[txt, img])
+
+    btn = gr.Button("🔍 Search", elem_id="searchBtn")
+
+    gr.Markdown("---")
+    gr.Markdown("### 📄 Search Results")
+    out = gr.HTML(elem_id="output")
+
+    gr.Markdown("### 📘 Patent Details")
     with gr.Row():
-        pat_in   = gr.Textbox(label="Patent # to preview (copy from table)", lines=1, elem_id="pnInput")
-        prev_btn = gr.Button("Preview", elem_id="previewBtn")
-    preview = gr.HTML(label="Patent front page", visible=False)
+        pat_in = gr.Textbox(label="Patent # to preview (copy from table)", lines=1, elem_id="pnInput")
+        prev_btn = gr.Button("👁️ Preview", elem_id="previewBtn")
+
+    preview = gr.HTML(label="Patent front page", visible=False, elem_id="preview")
 
     btn.click(run_search, inputs=[txt, img], outputs=out)
     txt.submit(run_search, inputs=[txt, img], outputs=out)
-
     prev_btn.click(load_patent_html, inputs=pat_in, outputs=preview)
     pat_in.submit(load_patent_html, inputs=pat_in, outputs=preview)
 
-# synchronous launch (no extra queue args)
+    gr.HTML("""
+    <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        background-color: #f8f9fb;
+        color: #333;
+    }
+    h1, h2, h3 {
+        color: #1d3557;
+    }
+    .gradio-container {
+        padding: 2rem;
+    }
+    #pnInput, .gr-button, .gr-textbox, .gr-image, .gr-radio {
+        font-size: 1rem;
+        margin-bottom: 1.2rem;
+    }
+    .gr-button {
+        padding: 0.6em 1.2em !important;
+        border-radius: 6px !important;
+        border: none !important;
+    }
+    #searchBtn {
+        background-color: #2e7d32 !important;
+        color: white !important;
+    }
+    #searchBtn:hover {
+        background-color: #388e3c !important;
+    }
+    #previewBtn {
+        background-color: #1565c0 !important;
+        color: white !important;
+    }
+    #previewBtn:hover {
+        background-color: #1976d2 !important;
+    }
+    #preview, #output {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.08);
+        max-height: 500px;
+        overflow-y: auto;
+        margin-top: 1rem;
+        color: #000 !important;
+    }
+    #preview *:not(a), #output *:not(a) {
+        color: #000 !important;
+    }
+    #preview a, #output a {
+        color: #1a73e8 !important;
+        text-decoration: underline;
+    }
+    hr, .gr-markdown hr {
+        border: 0;
+        border-top: 1px solid #ccc;
+        margin: 2rem 0;
+    }
+    </style>
+    """)
+# ─────────────────────────────
+# Launch app
+# ─────────────────────────────
 if __name__ == "__main__":
     demo.launch()
