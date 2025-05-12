@@ -250,14 +250,27 @@ def load_patent_html(pat_num: str):
 with gr.Blocks(title="Patent RAG Demo") as demo:
     # Header
     gr.HTML("""
-    <div style='text-align: center; margin-bottom: 2rem;'>
-        <h1 style='font-size: 2.2rem; color: #112244 !important; margin-bottom: 0.2rem;'>USPTO Patent RAG System</h1>
-        <div style='font-size: 1.05rem; color: #555;'>A Senior Project by Arush Joshi</div>
-        <div style='font-size: 0.95rem; color: #777;'>BASIS Independent High School · Class of 2025</div>
-    </div>
-    """)
-
-    gr.Markdown("### 🔎 Search Input")
+        <div style='text-align: center; margin-bottom: 2rem;'>
+            <h1 style='
+                font-size: 2.6rem;
+                font-weight: 700;
+                letter-spacing: 0.3px;
+                color: #1a3cff;
+                margin-bottom: 0.5rem;
+                border-bottom: 3px solid #1a3cff;
+                display: inline-block;
+                padding-bottom: 0.2rem;
+            '>
+                Patent Explorer AI
+            </h1>
+            <h3 style='font-size: 1.1rem; color: #444; margin-top: 0.5rem;'>
+                Search the USPTO patent database using natural language or technical drawings — powered by AI and real-time retrieval.
+            </h3>
+            <div style='font-size: 1.05rem; color: #555; margin-top: 1rem;'>A Senior Project by Arush Joshi</div>
+            <div style='font-size: 0.95rem; color: #777;'>BASIS Independent High School · Class of 2025</div>
+        </div>
+        """)
+    gr.Markdown("_Choose a search mode: use a descriptive question or upload a technical image._")
     mode = gr.Radio(["Text Query", "Image Search"], label="Select Search Mode", value="Text Query")
 
     txt = gr.Textbox(label="Text Query", placeholder="e.g. semiconductor packaging", visible=True)
